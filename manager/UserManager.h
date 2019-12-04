@@ -2,8 +2,7 @@
 #include<iostream>
 #include<map>
 #include<vector>
-#include <uuid/uuid.h>
-#include<stdlib.h>
+#include<cstdlib>
 #include"../util/DataUtil.h"
 #include"../util/Const.h"
 #include"../model/User.h"
@@ -11,46 +10,43 @@ using namespace std;
 
 class UserManager{
     private:
-        void mapFromDatabase();     /*½«Êı¾İ¿âÖĞĞÅÏ¢Ó³Éä½ø³ÉÔ±±äÁ¿usersÖĞ*/
-        bool equalVectors(vector<string> vectors[],int length);     /*ÅĞ¶ÏÕâĞ©vectorÊÇ·ñÏàµÈ*/
-        vector<User&> users;        /*µ±Ç°Ó³Éä²¢ÇÒ±»Î¬»¤µÄµÄÓÃ»§ÁĞ±í*/
+        void mapFromDatabase();     /*å°†æ•°æ®åº“ä¸­ä¿¡æ¯æ˜ å°„è¿›æˆå‘˜å˜é‡usersä¸­*/
+        vector<User> users;        /*å½“å‰æ˜ å°„å¹¶ä¸”è¢«ç»´æŠ¤çš„çš„ç”¨æˆ·åˆ—è¡¨*/
     public:
         UserManager();
         ~UserManager();
-        addUser(string username,string userpass,string usertype,string &mainkey); /*Ìí¼ÓÓÃ»§*/
-        delUser(string mainkey);                                    /*É¾³ıÓÃ»§*/
-        updateUsertype(string mainkey,string usertype);             /*¸üĞÂÓÃ»§ÀàĞÍ*/
-        updateUserpass(string mainkey,string userpass);             /*¸üĞÂÓÃ»§ÃÜÂë*/
-        updateUsername(string mainkey,string username);             /*¸üĞÂÓÃ»§Ãû*/
-        findUserByUsername(string username,User& user);             /*ÒÔusername»ñÈ¡ÓÃ»§*/
-        findUserByMainkey(string mainkey,User& user);               /*ÒÔmainkey»ñÈ¡ÓÃ»§*/
-        loginNormalUser(string username,string userpass,string &mainkey);   /*ÆÕÍ¨ÓÃ»§µÇÂ¼*/
-        registNromalUser(string username,string userpass£¬string &mainkey); /*×¢²áÆÕÍ¨ÓÃ»§*/
+        bool addUser(string username,string userpass,string usertype,string &mainkey); /*æ·»åŠ ç”¨æˆ·*/
+        bool delUser(string mainkey);                                    /*åˆ é™¤ç”¨æˆ·*/
+        bool updateUsertype(string mainkey,string usertype);             /*æ›´æ–°ç”¨æˆ·ç±»å‹*/
+        bool updateUserpass(string mainkey,string userpass);             /*æ›´æ–°ç”¨æˆ·å¯†ç */
+        bool updateUsername(string mainkey,string username);             /*æ›´æ–°ç”¨æˆ·å*/
+        bool findUserByUsername(string username,User& user);             /*ä»¥usernameè·å–ç”¨æˆ·*/
+        bool findUserByMainkey(string mainkey,User& user);               /*ä»¥mainkeyè·å–ç”¨æˆ·*/
+        bool loginUser(string username,string userpass,string &mainkey);   /*æ™®é€šç”¨æˆ·ç™»å½•*/
+        bool registNromalUser(string username,string userpass,string &mainkey); /*æ³¨å†Œæ™®é€šç”¨æˆ·*/
 };
 
 
 UserManager::UserManager(){
-    this->mapFromDatabase();    /*´ÓÊı¾İ¿âÓ³Éäµ½Ä£ĞÍ*/
+    this->mapFromDatabase();    /*ä»æ•°æ®åº“æ˜ å°„åˆ°æ¨¡å‹*/
 }
 
 UserManager::~UserManager(){
-    for(int i=0;i<users.size();i++){
-        delete &(users[i]);
-    }
+    
 }
 
-bool UserManager::registNromalUser(string username,string userpass£¬string &mainkey){
-    return this->addUser(mainkey,username,userpass,USER_TYPE_NORMAL_USER);
+bool UserManager::registNromalUser(string username,string userpass,string &mainkey){
+    return this->addUser(username,userpass,USER_TYPE_NORMAL_USER,mainkey);
 }
 
 /**
- * µÇÂ¼¹¦ÄÜ ·µ»ØmainkeyÓÃÓÚÖ®ºó»»È¡ÆäËûĞÅÏ¢ Ò²¾ÍÊÇsession µ«ÊÇ´Ë´¦²»ÔÙÊµÏÖsessionÁË
+ * ç™»å½•åŠŸèƒ½ è¿”å›mainkeyç”¨äºä¹‹åæ¢å–å…¶ä»–ä¿¡æ¯ ä¹Ÿå°±æ˜¯session ä½†æ˜¯æ­¤å¤„ä¸å†å®ç°sessionäº†
  */
 
-bool UserManager::loginNormalUser(string username,string userpass,string &mainkey){
+bool UserManager::loginUser(string username,string userpass,string &mainkey){
     User user;
     if(findUserByUsername(username,user)){
-        if(user.getUserpass == userpass){
+        if(user.getUserpass() == userpass){
             mainkey = user.getMainkey();
             return true;
         }
@@ -59,7 +55,7 @@ bool UserManager::loginNormalUser(string username,string userpass,string &mainke
 
 bool UserManager::findUserByUsername(string username,User& user){
     for(int i=0;i<users.size();i++){
-        if(users[i].getUsername() == mainkey){
+        if(users[i].getUsername() == username){
             user = users[i];
             return true;
         }
@@ -82,17 +78,17 @@ bool UserManager::updateUsername(string mainkey,string username){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃûÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·åå¤±è´¥"<<endl;
         return false;
     }
 }
 
 bool UserManager::updateUserpass(string mainkey,string userpass){
-    if(updateValueIntoTable(DEFAULT_TABLE_USER,"username",username,"mainkey",mainkey)){
+    if(updateValueIntoTable(DEFAULT_TABLE_USER,"userpass",userpass,"mainkey",mainkey)){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·å¯†ç å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -102,7 +98,7 @@ bool UserManager::updateUsertype(string mainkey,string usertype){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÀàĞÍÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·ç±»å‹å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -112,41 +108,30 @@ bool UserManager::delUser(string mainkey){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"É¾³ıÓÃ»§Ê§°Ü"<<endl;
+        cout<<"åˆ é™¤ç”¨æˆ·å¤±è´¥"<<endl;
         return false;
     }
 }
 
 bool UserManager::addUser(string username,string userpass,string usertype,string &mainkey){
-    string mainky(rand());
-    mainkey = mainky;
+    mainkey = to_string(rand());
     //User user(mainky,username,userpass,usertype);
     map<string,string> mp;
     mp.insert(pair<string,string>("username",username));
     mp.insert(pair<string,string>("userpass",userpass));
     mp.insert(pair<string,string>("usertype",usertype));
-    if(insertValuesWithMainkeyIntoTable(DEFAULT_TABLE_USER,"mainkey",mainkey)){
+    if(insertValuesWithMainkeyIntoTable(DEFAULT_TABLE_USER,mp,"mainkey",mainkey)){
         this->mapFromDatabase();
         return true;
     }else{
-        cout<<"Ìí¼ÓÓÃ»§Ê§°Ü"<<endl;
+        cout<<"æ·»åŠ ç”¨æˆ·å¤±è´¥"<<endl;
         return false;
     }
 }
 
-bool UserManager::equalVectors(vector<string> vectors[],int length){
-    if(length == 0)
-        return false;
-    int len = vectors[0].size();
-    for(int i=0;i<length;i++){
-        if(vector[i].size()!=len)
-            return false;
-    }
-    return true;
-}
 
 void UserManager::mapFromDatabase(){
-    map<string,vector*> mp;
+    map<string,vector<string>*> mp;
     map<string,string> cond;
     mp.insert(pair<string,vector<string>*>("mainkey",nullptr));
     mp.insert(pair<string,vector<string>*>("username",nullptr));
@@ -157,32 +142,33 @@ void UserManager::mapFromDatabase(){
         vector<string>* username = mp["username"];
         vector<string>* userpass = mp["userpass"];
         vector<string>* usertype = mp["usertype"];
-        vector<string> vectors = {*mainkey,*username,*userpass,*usertype};
+        vector<string> vectors[] = {*mainkey,*username,*userpass,*usertype};
         if(equalVectors(vectors,4)){
-            /*´¦ÀíÊı¾İ½á¹¹*/
-            if(user.size()==mainkey->size()){
+            if(users.size()==mainkey->size()){
                 //do nothing
-            }else if(user.size()<mainkey->size()){
-                for(int i=0;i<mainkey->size()-user.size();i++){
+            }else if(users.size()<mainkey->size()){
+                int c = mainkey->size()-users.size();
+                for(int i=0;i<c;i++){
                     users.push_back(*(new User));
                 }
             }else{
-                for(int i=users.size()-1;i>=mainkey->size();i--){
+                int c = users.size()-mainkey->size();
+                for(int i=0;i<c;i++){
                     User del = users.back();
                     users.pop_back();
                     delete &del;
                 }
             }
             for(int i=0;i<users.size();i++){
-                users[i].setMainKey((*mainkey)[i]);
+                users[i].setMainkey((*mainkey)[i]);
                 users[i].setUsername((*username)[i]);
                 users[i].setUserpass((*userpass)[i]);
                 users[i].setUsertype((*usertype)[i]);
             }
         }else{
-            cout<<"Ê§°Ü,ÓĞ¿Õ×Ö¶Î"<<endl;
+            cout<<"å¤±è´¥,æœ‰ç©ºå­—æ®µ"<<endl;
         }
     }else{
-        cout<<"Êı¾İ¿â»ñÈ¡Ê§°Ü"<<endl;
+        cout<<"æ•°æ®åº“è·å–å¤±è´¥"<<endl;
     }
 }

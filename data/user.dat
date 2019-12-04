@@ -1,0 +1,11 @@
+[{
+		"mainkey":	"123130",
+		"username":	"admin",
+		"userpass":	"123456",
+		"usertype":	"0"
+	}, {
+		"mainkey":	"123131",
+		"username":	"mike",
+		"userpass":	"654321",
+		"usertype":	"1"
+	}]
