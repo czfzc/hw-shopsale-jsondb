@@ -8,7 +8,7 @@ using namespace std;
 class ProductManager{
     private:
         void mapFromDatabase();
-        vector<Product> products;        /*µ±Ç°Ó³Éä²¢ÇÒ±»Î¬»¤µÄµÄÓÃ»§ÁĞ±í*/
+        vector<Product> products;        /*å½“å‰æ˜ å°„å¹¶ä¸”è¢«ç»´æŠ¤çš„çš„ç”¨æˆ·åˆ—è¡¨*/
     public:
         ProductManager();
         ~ProductManager();
@@ -19,6 +19,9 @@ class ProductManager{
         bool updatePrice(string mainkey,double price);
         bool updateType(string mainkey,string type);
         bool findProductByMainkey(string mainkey,Product &product);
+        void formattedPrintProductList();
+        static void formattedPrintProductList(vector<Product> products);
+        bool findProductsByMainkeys(vector<string> mainkeys,vector<Product> &products);
 };
 
 void ProductManager::mapFromDatabase(){
@@ -62,10 +65,10 @@ void ProductManager::mapFromDatabase(){
                 products[i].setType((*type)[i]);
             }
         }else{
-            cout<<"Ê§°Ü,ÓĞ¿Õ×Ö¶Î"<<endl;
+            cout<<"å¤±è´¥,æœ‰ç©ºå­—æ®µ"<<endl;
         }
     }else{
-        cout<<"Êı¾İ¿â»ñÈ¡Ê§°Ü"<<endl;
+        cout<<"æ•°æ®åº“è·å–å¤±è´¥"<<endl;
     }
 }
 
@@ -87,7 +90,7 @@ bool ProductManager::addProduct(string name,int rest,double price,string type,st
         this->mapFromDatabase();
         return true;
     }else{
-        cout<<"Ìí¼ÓÉÌÆ·Ê§°Ü"<<endl;
+        cout<<"æ·»åŠ å•†å“å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -96,7 +99,7 @@ bool ProductManager::delProduct(string mainkey){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"É¾³ıÉÌÆ·Ê§°Ü"<<endl;
+        cout<<"åˆ é™¤å•†å“å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -105,7 +108,7 @@ bool ProductManager::updateName(string mainkey,string name){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·å¯†ç å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -114,7 +117,7 @@ bool ProductManager::updateRest(string mainkey,int rest){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·å¯†ç å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -123,7 +126,7 @@ bool ProductManager::updatePrice(string mainkey,double price){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·å¯†ç å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -132,7 +135,7 @@ bool ProductManager::updateType(string mainkey,string type){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹ç”¨æˆ·å¯†ç å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -144,4 +147,35 @@ bool ProductManager::findProductByMainkey(string mainkey,Product &product){
         }
     }
     return false;
+}
+
+void ProductManager::formattedPrintProductList(vector<Product> products){
+    cout<<"======================"<<endl;
+    for(int i=0;i<products.size();i++){
+        cout<<"å“åï¼š\t"<<products[i].getName()<<endl;
+        cout<<"ä»·æ ¼ï¼š\t"<<products[i].getPrice()<<endl;
+        cout<<"ä½™é‡ï¼š\t"<<products[i].getRest()<<endl;
+        cout<<"ç§ç±»ï¼š\t"<<products[i].getType()<<endl;
+        cout<<"å•†å“å·ï¼š\t"<<products[i].getMainkey()<<endl;
+        if(i!=products.size()-1)
+            cout<<"-----------------------"<<endl;
+    }
+    cout<<"======================"<<endl;
+}
+
+bool ProductManager::findProductsByMainkeys(vector<string> mainkeys,vector<Product> &products){
+    for(int i=0;i<mainkeys.size();i++){
+        Product product;
+        if(!findProductByMainkey(mainkeys[i],product)){
+            cout<<"è·å–å•†å“idä¸º"<<mainkeys[i]<<"å¤±è´¥"<<endl;
+            return false;
+        }
+        products.push_back(product);
+    }
+}
+
+void ProductManager::formattedPrintProductList(){
+    this->mapFromDatabase();
+    cout<<"\t\tå•†å“åˆ—è¡¨"<<endl;
+    this->formattedPrintProductList(this->products);
 }

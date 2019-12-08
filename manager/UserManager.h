@@ -3,6 +3,7 @@
 #include<map>
 #include<vector>
 #include<cstdlib>
+#include <ctime>
 #include"../util/DataUtil.h"
 #include"../util/Const.h"
 #include"../model/User.h"
@@ -50,6 +51,7 @@ bool UserManager::loginUser(string username,string userpass,string &mainkey){
             mainkey = user.getMainkey();
             return true;
         }
+        return false;
     }else return false;
 }
 
@@ -114,12 +116,17 @@ bool UserManager::delUser(string mainkey){
 }
 
 bool UserManager::addUser(string username,string userpass,string usertype,string &mainkey){
+    srand((int)time(0));
     mainkey = to_string(rand());
     //User user(mainky,username,userpass,usertype);
     map<string,string> mp;
     mp.insert(pair<string,string>("username",username));
     mp.insert(pair<string,string>("userpass",userpass));
     mp.insert(pair<string,string>("usertype",usertype));
+    if(existsInTable(DEFAULT_TABLE_USER,"username",username)){
+        cout<<"用户名已存在"<<endl;
+        return false;
+    }
     if(insertValuesWithMainkeyIntoTable(DEFAULT_TABLE_USER,mp,"mainkey",mainkey)){
         this->mapFromDatabase();
         return true;

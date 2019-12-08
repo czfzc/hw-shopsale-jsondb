@@ -1,6 +1,6 @@
 /**
  * 
- * �洢һЩ����
+ * 存储一些定义
  * 
  */
 #pragma once
@@ -13,15 +13,25 @@
 #define USER_TYPE_NORMAL_USER "1"
 
 /*
-    �й��û���ǰ����ҳ��Ķ���
+    有关用户当前所在页面的定义
 */
-#define NORMAL_USER_NO_LOGIN 0
-#define NORMAL_USER_AFTER_LOGIN_IN_MAIN_PAGE 1
+#define USER_NO_LOGIN 0         /*用户未登录状态*/
+#define NORMAL_USER_AFTER_LOGIN_IN_MAIN_PAGE 1      /*普通用户登录进入主页*/
+#define NORMAL_USER_REGIST 2        /*用户注册*/
+#define NORMAL_USER_SHOW_PRODUCT 3  /*普通用户查看商品*/
+#define NORMAL_USER_SHOW_ORDER 4    /*普通用户查看订单*/ 
+
+
+#define ADMIN_USER_AFTER_LOGIN_IN_MAIN_PAGE 21
 
 
 #include<vector>
+#include"../model/Order.h"
+#include"../model/Product.h"
+#include"../model/Order.h"
+#include"../util/DataUtil.h"
 
-bool equalVectors(vector<string> vectors[],int length){     /*�ж���Щvector�Ƿ����*/
+bool equalVectors(vector<string> vectors[],int length){     /*判断这些vector是否相等*/
     if(length == 0)
         return false;
     int len = vectors[0].size();
@@ -46,4 +56,13 @@ int spilt(string str,char s,string* words,int size){
             return num-1;
         }
     }
+}
+
+void pauseit(){
+    cout<<"按任意键继续"<<endl;
+    system("read -n 1");
+}
+
+void clearit(){
+    system("clear");
 }

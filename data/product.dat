@@ -1,0 +1,19 @@
+[{
+    "mainkey":"12",
+    "price":"8.9",
+    "rest":"5",
+    "type":"水果",
+    "name":"精选苹果"
+},{
+    "mainkey":"31",
+    "price":"3.5",
+    "rest":"5",
+    "type":"零食",
+    "name":"奥利奥"
+},{
+    "mainkey":"25",
+    "price":"4.9",
+    "rest":"5",
+    "type":"饮料",
+    "name":"冰红茶"
+}]

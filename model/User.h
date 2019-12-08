@@ -4,11 +4,11 @@ using namespace std;
 
 class User{
     private:
-        string mainkey;         /*ÓÃ»§µÄÖ÷¼ü*/
-        string username;        /*ÓÃ»§Ãû*/
-        string userpass;        /*ÓÃ»§ÃÜÂë*/
-        string usertype;        /*ÓÃ»§ÀàĞÍ*/
-        int optionstatus = 0;   /*µ±Ç°Ñ¡Ïî×´Ì¬*/
+        string mainkey;         /*ç”¨æˆ·çš„ä¸»é”®*/
+        string username;        /*ç”¨æˆ·å*/
+        string userpass;        /*ç”¨æˆ·å¯†ç */
+        string usertype;        /*ç”¨æˆ·ç±»å‹*/
+        int optionstatus = 0;   /*å½“å‰é€‰é¡¹çŠ¶æ€*/
     public:
         User();
         User(string mainkey,string username,string userpass,string usertype);

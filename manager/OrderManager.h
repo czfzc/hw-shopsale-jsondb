@@ -1,27 +1,42 @@
 /*
-    ÓÃ»§¶©µ¥¹ÜÀí
+    ç”¨æˆ·è®¢å•ç®¡ç†
 */
 #pragma once
 #include<iostream>
-#include"../util/DataUtil.h"
 #include"../util/Const.h"
-#include"../model/Order.h"
 using namespace std;
 
 class OrderManager{
     private:
-        void mapFromDatabase();     /*½«Êı¾İ¿âÖĞĞÅÏ¢Ó³Éä½ø³ÉÔ±±äÁ¿OrdersÖĞ*/
-        vector<Order> orders;        /*µ±Ç°Ó³Éä²¢ÇÒ±»Î¬»¤µÄµÄÓÃ»§ÁĞ±í*/
-        vector<string>& stringToVector(string str,char c);   /*½«×Ö·û´®²ğ·Ö³ÉÊı×é*/
-        string vectorToString(vector<string>& vec,char c);   /*Êı×éÁ¬³É×Ö·û´®*/
+        void mapFromDatabase();     /*å°†æ•°æ®åº“ä¸­ä¿¡æ¯æ˜ å°„è¿›æˆå‘˜å˜é‡Ordersä¸­*/
+        vector<Order> orders;        /*å½“å‰æ˜ å°„å¹¶ä¸”è¢«ç»´æŠ¤çš„çš„ç”¨æˆ·åˆ—è¡¨*/
+        vector<string>& stringToVector(string str,char c);   /*å°†å­—ç¬¦ä¸²æ‹†åˆ†æˆæ•°ç»„*/
+        string vectorToString(vector<string>& vec,char c);   /*æ•°ç»„è¿æˆå­—ç¬¦ä¸²*/
+        UserManager userManager;
+        ProductManager productManager;
     public:
         OrderManager();
         ~OrderManager();
         bool addOrder(string usermainkey,double total,vector<string>& productmainids,string &orderid);
         bool delOrder(string orderid);
         bool updateTotal(string orderid,double total);
-        bool findOrderByOrderid(string orderid,Order& Order);             /*ÒÔOrderid»ñÈ¡¶©µ¥*/
+        bool findOrderByOrderid(string orderid,Order& Order);             /*ä»¥Orderidè·å–è®¢å•*/
+        void formattedPrintOrderList();
+        void formattedPrintOrderList(vector<Order> orders);
+        void formattedPrintOrderListByUsermainid(string mainid);
+        bool findOrdersByUsermainid(string usermainid,vector<Order> orders);
+        bool payOrder(string usermainkey,vector<Product> products,string &orderid);
 };
+
+bool OrderManager::findOrdersByUsermainid(string usermainid,vector<Order> orders){
+    this->mapFromDatabase();
+    for(int i=0;i<this->orders.size();i++){
+        if(orders[i].getUsermainid() == usermainid){
+            orders.push_back(orders[i]);
+        }
+    }
+    return true;
+}
 
 vector<string>& OrderManager::stringToVector(string str,char c){
     int size = 100;
@@ -81,10 +96,10 @@ void OrderManager::mapFromDatabase(){
                 orders[i].setTotal(atof((*total)[i].c_str()));
             }
         }else{
-            cout<<"Ê§°Ü,ÓĞ¿Õ×Ö¶Î"<<endl;
+            cout<<"å¤±è´¥,æœ‰ç©ºå­—æ®µ"<<endl;
         }
     }else{
-        cout<<"Êı¾İ¿â»ñÈ¡Ê§°Ü"<<endl;
+        cout<<"æ•°æ®åº“è·å–å¤±è´¥"<<endl;
     }
 }
 OrderManager::OrderManager(){
@@ -103,7 +118,7 @@ bool OrderManager::addOrder(string usermainkey,double total,vector<string>& prod
         this->mapFromDatabase();
         return true;
     }else{
-        cout<<"Ìí¼Ó¶©µ¥Ê§°Ü"<<endl;
+        cout<<"æ·»åŠ è®¢å•å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -112,7 +127,7 @@ bool OrderManager::delOrder(string orderid){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"É¾³ıÉÌÆ·Ê§°Ü"<<endl;
+        cout<<"åˆ é™¤å•†å“å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -121,7 +136,7 @@ bool OrderManager::updateTotal(string orderid,double total){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"ĞŞ¸ÄÓÃ»§ÃÜÂëÊ§°Ü"<<endl;
+        cout<<"ä¿®æ”¹æ€»ä»·å¤±è´¥"<<endl;
         return false;
     }
 }
@@ -133,4 +148,45 @@ bool OrderManager::findOrderByOrderid(string orderid,Order& order){
         }
     }
     return false;
+}
+
+void OrderManager::formattedPrintOrderList(vector<Order> orders){
+    
+    cout<<"\t\tè®¢å•åˆ—è¡¨"<<endl;
+    cout<<"======================"<<endl;
+    for(int i=0;i<orders.size();i++){
+        cout<<"è®¢å•å·ï¼š\t"<<orders[i].getOrderid()<<endl;
+        cout<<"è®¢å•æ€»ä»·ï¼š\t"<<orders[i].getTotal()<<endl;
+        cout<<"ç”¨æˆ·idï¼š\t"<<orders[i].getUsermainid()<<endl;
+        User user;
+        userManager.findUserByMainkey(orders[i].getUsermainid(),user);
+        cout<<"ç”¨æˆ·åï¼š\t"<<user.getUsername()<<endl;
+        cout<<"å•†å“åˆ—è¡¨:"<<endl;
+        vector<Product> products;
+        productManager.findProductsByMainkeys(orders[i].getProductmainids(),products);
+        productManager.formattedPrintProductList(products);
+        if(i!=this->orders.size()-1)
+            cout<<"-----------------------"<<endl;
+    }
+    cout<<"======================"<<endl;
+}
+
+void OrderManager::formattedPrintOrderList(){
+    this->mapFromDatabase();
+}
+
+void OrderManager::formattedPrintOrderListByUsermainid(string usermainid){
+    vector<Order> orders; 
+    this->findOrdersByUsermainid(usermainid,orders);
+    this->formattedPrintOrderList(orders);
+}
+
+bool OrderManager::payOrder(string usermainkey,vector<Product> products,string &orderid){
+    double total=0;
+    vector<string> ids;
+    for(int i=0;i<products.size();i++){
+        total+=products[i].getPrice();
+        ids.push_back(products[i].getMainkey());
+    }
+    return this->addOrder(usermainkey,total,ids,orderid);
 }

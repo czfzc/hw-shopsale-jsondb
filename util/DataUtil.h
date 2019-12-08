@@ -207,6 +207,7 @@ bool insertValuesWithMainkeyIntoTable(string tableName,map<string,string> &keyma
         neb::CJsonObject ojson(buf.str());
         for(int i=0;!ojson[i].IsEmpty();i++){
             if(ojson[i](mainkey)==mainvalue){
+                cout<<"主键不唯一"<<endl;
                 return false; /*主键唯一*/
             }
         }
@@ -237,4 +238,67 @@ bool insertValueWithMainkeyIntoTable(string tableName,string key,string value,st
     map<string,string> mp;
     mp.insert(pair<string,string>(key,value));
     return insertValuesWithMainkeyIntoTable(tableName,mp,mainkey,mainvalue);
+}
+
+
+bool insertValuesIntoTable(string tableName,map<string,string> &keymaps){
+    string file_name=getFilePath(tableName);
+    if(access(file_name.c_str(),6)!=-1){     /*判断是否有读写权限打开文件，以及文件是否存在*/
+        fstream file(file_name,ios::in);
+        stringstream buf;
+        buf<<file.rdbuf();
+        file.close();
+        neb::CJsonObject ojson(buf.str());
+        fstream wri(file_name,ios::trunc|ios::out);
+        map<string,string>::iterator ite = keymaps.begin();
+        neb::CJsonObject item;
+        while(ite != keymaps.end()){
+            /*添加一个字段*/
+            item.Add(ite->first,ite->second);
+            ite++;
+        }        
+        ojson.Add(item);
+        wri << ojson.ToFormattedString();
+       // cout<< ojson.ToFormattedString()<<endl;
+        wri.flush();
+        wri.close();
+    }else{
+        if(access(file_name.c_str(),2)!=-1){
+            cout<<"没有权限修改文件"<<endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+bool insertIt(string tableName,string key,string value){
+    map<string,string> mp;
+    mp.insert(pair<string,string>(key,value));
+    return insertValuesIntoTable(tableName,mp);
+}
+
+bool existsInTable(string tableName,string key,string value){
+    string file_name=getFilePath(tableName);
+    if(access(file_name.c_str(),4)!=-1){  /*判断是否有可读权限*/
+        fstream file(file_name,ios::in);
+        stringstream buf;
+        buf<<file.rdbuf();
+        file.close();
+        neb::CJsonObject json(buf.str());
+        if(!json.IsArray()){
+            cout<<"数据库格式错误"<<endl;
+            return false;
+        }
+        map<string,string> mp;
+        mp.insert(pair<string,string>(key,value));
+        for(int i=0;!json[i].IsEmpty();i++){
+            if(conditionFit(mp,json[i])){
+               return true; 
+            }
+        }
+        return false;
+    }else{
+        cout<<"没有权限读取文件"<<endl;
+        return false;
+    }
 }
