@@ -1,0 +1,30 @@
+﻿  main.cpp
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(267): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(269): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(284): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(288): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(295): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(299): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(357): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(2263): note: 参见“sscanf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(367): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(2263): note: 参见“sscanf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(472): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(702): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(852): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\lib\cjson.h(857): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  d:\windows kits\10\include\10.0.17134.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\util\datautil.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\util\datautil.h(107): error C2601: “selectValuesIntoTable”: 本地函数定义是非法的
+  c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\util\datautil.h(64): note: 此行有一个“{”没有匹配项
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\util\datautil.h(200): error C2001: 常量中有换行符
+c:\users\czf\desktop\程序设计作业\hw-shopsale-jsondb\util\datautil.h(387): fatal error C1071: 在注释中遇到意外的文件结束
