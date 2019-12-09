@@ -630,5 +630,4 @@ bool ShopController::opt_admin_manage_user(){
             return true;
         }
     }
-
 }
