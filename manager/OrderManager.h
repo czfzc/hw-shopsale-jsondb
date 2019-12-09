@@ -23,16 +23,16 @@ class OrderManager{
         bool findOrderByOrderid(string orderid,Order& Order);             /*以Orderid获取订单*/
         void formattedPrintOrderList();
         void formattedPrintOrderList(vector<Order> orders);
-        void formattedPrintOrderListByUsermainid(string mainid);
-        bool findOrdersByUsermainid(string usermainid,vector<Order> orders);
+        void formattedPrintOrderListByUsermainkey(string mainid);
+        bool findOrdersByUsermainkey(string usermainkey,vector<Order> &orders);
         bool payOrder(string usermainkey,vector<Product> products,string &orderid);
 };
 
-bool OrderManager::findOrdersByUsermainid(string usermainid,vector<Order> orders){
+bool OrderManager::findOrdersByUsermainkey(string usermainkey,vector<Order> &orders){
     this->mapFromDatabase();
     for(int i=0;i<this->orders.size();i++){
-        if(orders[i].getUsermainid() == usermainid){
-            orders.push_back(orders[i]);
+        if(this->orders[i].getUsermainkey() == usermainkey){
+            orders.push_back(this->orders[i]);
         }
     }
     return true;
@@ -53,7 +53,7 @@ string OrderManager::vectorToString(vector<string>& vec,char c){
     string str = "";
     for(int i=0;i<vec.size();i++){
         str+=vec[i];
-        if(i==vec.size()-1)
+        if(i!=vec.size()-1)
             str+=c;
     }
     return str;
@@ -64,14 +64,14 @@ void OrderManager::mapFromDatabase(){
     map<string,string> cond;
     mp.insert(pair<string,vector<string>*>("orderid",nullptr));
     mp.insert(pair<string,vector<string>*>("productmainids",nullptr));
-    mp.insert(pair<string,vector<string>*>("usermainid",nullptr));
+    mp.insert(pair<string,vector<string>*>("usermainkey",nullptr));
     mp.insert(pair<string,vector<string>*>("total",nullptr));
     if(selectValuesIntoTable(DEFAULT_TABLE_ORDER,mp,cond)){
         vector<string>* orderid = mp["orderid"];
         vector<string>* productmainids = mp["productmainids"];
-        vector<string>* usermainid = mp["usermainid"];
+        vector<string>* usermainkey = mp["usermainkey"];
         vector<string>* total = mp["total"];
-        vector<string> vectors[] = {*orderid,*productmainids,*usermainid,*total};
+        vector<string> vectors[] = {*orderid,*productmainids,*usermainkey,*total};
         if(equalVectors(vectors,4)){
             if(orders.size()==orderid->size()){
                 //do nothing
@@ -85,12 +85,11 @@ void OrderManager::mapFromDatabase(){
                 for(int i=0;i<c;i++){
                     Order del = orders.back();
                     orders.pop_back();
-                    delete &del;
                 }
             }
             for(int i=0;i<orders.size();i++){
                 orders[i].setOrderid((*orderid)[i]);
-                orders[i].setUsermainid((*usermainid)[i]);
+                orders[i].setUsermainkey((*usermainkey)[i]);
                 vector<string> ids = stringToVector((*productmainids)[i],',');
                 orders[i].setProductmainids(ids);
                 orders[i].setTotal(atof((*total)[i].c_str()));
@@ -109,6 +108,7 @@ OrderManager::~OrderManager(){
 
 }
 bool OrderManager::addOrder(string usermainkey,double total,vector<string>& productmainids,string &orderid){
+    srand((int)time(0));
     orderid = to_string(rand());
     map<string,string> mp;
     mp.insert(pair<string,string>("usermainkey",usermainkey));
@@ -151,15 +151,14 @@ bool OrderManager::findOrderByOrderid(string orderid,Order& order){
 }
 
 void OrderManager::formattedPrintOrderList(vector<Order> orders){
-    
-    cout<<"\t\t订单列表"<<endl;
+    cout<<"\t订单列表"<<endl;
     cout<<"======================"<<endl;
     for(int i=0;i<orders.size();i++){
         cout<<"订单号：\t"<<orders[i].getOrderid()<<endl;
         cout<<"订单总价：\t"<<orders[i].getTotal()<<endl;
-        cout<<"用户id：\t"<<orders[i].getUsermainid()<<endl;
+        cout<<"用户id：\t"<<orders[i].getUsermainkey()<<endl;
         User user;
-        userManager.findUserByMainkey(orders[i].getUsermainid(),user);
+        userManager.findUserByMainkey(orders[i].getUsermainkey(),user);
         cout<<"用户名：\t"<<user.getUsername()<<endl;
         cout<<"商品列表:"<<endl;
         vector<Product> products;
@@ -173,11 +172,12 @@ void OrderManager::formattedPrintOrderList(vector<Order> orders){
 
 void OrderManager::formattedPrintOrderList(){
     this->mapFromDatabase();
+    this->formattedPrintOrderList(this->orders);
 }
 
-void OrderManager::formattedPrintOrderListByUsermainid(string usermainid){
+void OrderManager::formattedPrintOrderListByUsermainkey(string usermainkey){
     vector<Order> orders; 
-    this->findOrdersByUsermainid(usermainid,orders);
+    this->findOrdersByUsermainkey(usermainkey,orders);
     this->formattedPrintOrderList(orders);
 }
 

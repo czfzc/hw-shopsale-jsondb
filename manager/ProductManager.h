@@ -19,6 +19,7 @@ class ProductManager{
         bool updatePrice(string mainkey,double price);
         bool updateType(string mainkey,string type);
         bool findProductByMainkey(string mainkey,Product &product);
+        bool findProductsByNameLike(string name,vector<Product> &products);
         void formattedPrintProductList();
         static void formattedPrintProductList(vector<Product> products);
         bool findProductsByMainkeys(vector<string> mainkeys,vector<Product> &products);
@@ -90,7 +91,6 @@ bool ProductManager::addProduct(string name,int rest,double price,string type,st
         this->mapFromDatabase();
         return true;
     }else{
-        cout<<"添加商品失败"<<endl;
         return false;
     }
 }
@@ -99,7 +99,6 @@ bool ProductManager::delProduct(string mainkey){
         mapFromDatabase();
         return true;
     }else{
-        cout<<"删除商品失败"<<endl;
         return false;
     }
 }
@@ -174,8 +173,20 @@ bool ProductManager::findProductsByMainkeys(vector<string> mainkeys,vector<Produ
     }
 }
 
+bool ProductManager::findProductsByNameLike(string name,vector<Product> &products){
+    this->mapFromDatabase();
+    bool status = false;
+    for(int i=0;i<this->products.size();i++){
+        if(this->products[i].getName().find(name)!=-1){
+            products.push_back(this->products[i]);
+            status = true;
+        }
+    }
+    return status;
+}
+
 void ProductManager::formattedPrintProductList(){
     this->mapFromDatabase();
-    cout<<"\t\t商品列表"<<endl;
+    cout<<"\t商品列表"<<endl;
     this->formattedPrintProductList(this->products);
 }

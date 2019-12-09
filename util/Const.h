@@ -23,13 +23,19 @@
 
 
 #define ADMIN_USER_AFTER_LOGIN_IN_MAIN_PAGE 21
+#define ADMIN_USER_MANAGE_ORDER 22
+#define ADMIN_USER_MANAGE_PRODUCT 23
+#define ADMIN_USER_MANAGE_USER 24
 
 
 #include<vector>
+#include<iostream>
 #include"../model/Order.h"
 #include"../model/Product.h"
 #include"../model/Order.h"
 #include"../util/DataUtil.h"
+
+using namespace std;
 
 bool equalVectors(vector<string> vectors[],int length){     /*判断这些vector是否相等*/
     if(length == 0)
@@ -60,7 +66,9 @@ int spilt(string str,char s,string* words,int size){
 
 void pauseit(){
     cout<<"按任意键继续"<<endl;
-    system("read -n 1");
+  //  system("read -n 1");
+    while(cin.get()!='\n');
+    cin.get();
 }
 
 void clearit(){

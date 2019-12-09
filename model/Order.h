@@ -6,14 +6,14 @@ using namespace std;
 class Order{
     private:
         string orderid;
-        string usermainid;
+        string usermainkey;
         vector<string> productmainids;
         double total;
     public:
         string getOrderid();
         void setOrderid(string orderid);
-        string getUsermainid();
-        void setUsermainid(string usermainid);
+        string getUsermainkey();
+        void setUsermainkey(string usermainkey);
         vector<string>& getProductmainids();
         void setProductmainids(vector<string> productmainids);
         double getTotal();
@@ -26,11 +26,11 @@ string Order::getOrderid(){
 void Order::setOrderid(string orderid){
     this->orderid = orderid;
 }
-string Order::getUsermainid(){
-    return this->usermainid;
+string Order::getUsermainkey(){
+    return this->usermainkey;
 }
-void Order::setUsermainid(string usermainid){
-    this->usermainid = usermainid;
+void Order::setUsermainkey(string usermainkey){
+    this->usermainkey = usermainkey;
 }
 vector<string>& Order::getProductmainids(){
     return this->productmainids;

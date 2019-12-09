@@ -25,6 +25,9 @@ class UserManager{
         bool findUserByMainkey(string mainkey,User& user);               /*以mainkey获取用户*/
         bool loginUser(string username,string userpass,string &mainkey);   /*普通用户登录*/
         bool registNromalUser(string username,string userpass,string &mainkey); /*注册普通用户*/
+        static void formattedPrintProductList(vector<User> users);             /*根据列表格式化打印用户信息*/
+        void formattedPrintProductList();                                 /*打印所有用户信息*/
+        bool findUsersByUserLike(string name,vector<User> &users);
 };
 
 
@@ -163,7 +166,6 @@ void UserManager::mapFromDatabase(){
                 for(int i=0;i<c;i++){
                     User del = users.back();
                     users.pop_back();
-                    delete &del;
                 }
             }
             for(int i=0;i<users.size();i++){
@@ -178,4 +180,39 @@ void UserManager::mapFromDatabase(){
     }else{
         cout<<"数据库获取失败"<<endl;
     }
+}
+
+void UserManager::formattedPrintProductList(vector<User> users){
+    cout<<"======================"<<endl;
+    for(int i=0;i<users.size();i++){
+        cout<<"用户id：\t"<<users[i].getMainkey()<<endl;
+        cout<<"用户名：\t"<<users[i].getUsername()<<endl;
+        if(users[i].getUserType()==USER_TYPE_ADMIN_USER){
+            cout<<"用户类型：\t管理员"<<endl;
+        }else if(users[i].getUserType()==USER_TYPE_NORMAL_USER){
+            cout<<"用户类型：\t普通用户"<<endl;
+        }
+        cout<<"用户密码：\t"<<users[i].getUserpass()<<endl;
+        if(i!=users.size()-1)
+            cout<<"-----------------------"<<endl;
+    }
+    cout<<"======================"<<endl;
+}
+
+bool UserManager::findUsersByUserLike(string username,vector<User> &users){
+    this->mapFromDatabase();
+    bool status = false;
+    for(int i=0;i<this->users.size();i++){
+        if(this->users[i].getUsername().find(username)!=-1){
+            users.push_back(this->users[i]);
+            status = true;
+        }
+    }
+    return status;
+}
+
+
+void UserManager::formattedPrintProductList(){
+    this->mapFromDatabase();
+    this->formattedPrintProductList(this->users);
 }
