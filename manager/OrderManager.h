@@ -6,26 +6,36 @@
 #include"../util/Const.h"
 using namespace std;
 
+/**
+ *  本类是用来管理订单（Order）模型的管理器，它在MVC架构中处于repository层，
+ *  负责处理数据库映射模型的事务,实现了部分根据字段从数据库获取数据并且映射到
+ *  模型的函数
+ *  虽然已被提交作业，但是代码可能被更新在github，您可以在主目录下使用git pull origin master命令拉取以更新代码
+ *  链接https://github.com/czfzc/hw-shopsale-jsondb/blob/master/manager/OrderManager.h
+ *  authored by 曹子帆 2019.12.9
+ */
+
 class OrderManager{
     private:
-        void mapFromDatabase();     /*将数据库中信息映射进成员变量Orders中*/
-        vector<Order> orders;        /*当前映射并且被维护的的用户列表*/
+        void mapFromDatabase();                     /*将数据库中信息映射进成员变量Orders中*/
+        vector<Order> orders;                       /*当前映射模型并且被维护的的用户列表,可以作为高速缓存*/
         vector<string>& stringToVector(string str,char c);   /*将字符串拆分成数组*/
         string vectorToString(vector<string>& vec,char c);   /*数组连成字符串*/
-        UserManager userManager;
-        ProductManager productManager;
+        UserManager userManager;                    /*用户模型管理器*/
+        ProductManager productManager;              /*产品模型管理器*/
     public:
-        OrderManager();
-        ~OrderManager();
+        OrderManager();                             /*构造函数，用来初始化一些变量并且调用mapFromDatabase以开始映射*/
+        ~OrderManager();                            /*析构函数，暂时未做任何处理*/
+                                                    /*添加订单到数据库*/
         bool addOrder(string usermainkey,double total,vector<string>& productmainids,string &orderid);
-        bool delOrder(string orderid);
-        bool updateTotal(string orderid,double total);
+        bool delOrder(string orderid);              /*删除订单*/
+        bool updateTotal(string orderid,double total);          /*更新订单总价*/
         bool findOrderByOrderid(string orderid,Order& Order);             /*以Orderid获取订单*/
-        void formattedPrintOrderList();
-        void formattedPrintOrderList(vector<Order> orders);
-        void formattedPrintOrderListByUsermainkey(string mainid);
-        bool findOrdersByUsermainkey(string usermainkey,vector<Order> &orders);
-        bool payOrder(string usermainkey,vector<Product> products,string &orderid);
+        void formattedPrintOrderList();                             /*格式化打印当前数据库所有订单*/
+        void formattedPrintOrderList(vector<Order> orders);         /*指定列表格式化打印*/
+        void formattedPrintOrderListByUsermainkey(string mainid);    /*格式化打印指定用户的所有订单*/
+        bool findOrdersByUsermainkey(string usermainkey,vector<Order> &orders);     /*根据用户id在数据库中查找订单*/
+        bool payOrder(string usermainkey,vector<Product> products,string &orderid); /*下单付款*/
 };
 
 bool OrderManager::findOrdersByUsermainkey(string usermainkey,vector<Order> &orders){
@@ -164,7 +174,7 @@ void OrderManager::formattedPrintOrderList(vector<Order> orders){
         vector<Product> products;
         productManager.findProductsByMainkeys(orders[i].getProductmainids(),products);
         productManager.formattedPrintProductList(products);
-        if(i!=this->orders.size()-1)
+        if(i!=orders.size()-1)
             cout<<"-----------------------"<<endl;
     }
     cout<<"======================"<<endl;

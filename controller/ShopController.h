@@ -11,10 +11,12 @@
 using namespace std;
 
 /**
- *  此类用来作为与用户交互的主控制器 在MVC架构中属于controller层 
+ *  此类用来作为与用户交互操作的主控制器 在MVC架构中属于controller层 
  *  提供登录注销和获取选项的公有接口，使用简单，只需要创建对象，
- *  调用获取选项的接口并且互动即可  
- *  authored by 曹子帆 2019.12.9  
+ *  调用获取选项的接口并且互动即可    
+ *  虽然已被提交作业，但是代码可能被更新在github，您可以在主目录下使用git pull origin master命令拉取以更新代码
+ *  链接https://github.com/czfzc/hw-shopsale-jsondb/blob/master/controller/ShopController.h
+ *  authored by 曹子帆 2019.12.9
  */ 
 
 class ShopController{
@@ -27,32 +29,24 @@ class ShopController{
         string errormsg;                /*错误消息，实际上未使用*/
         static void exitIfNotTrue(bool status,string errmsg);       /*工具函数，实际未使用*/
         static void reloginIfNotTrue(bool status,string errmsg);    /*工具函数，实际未使用*/
-        int getchoice();
-        string getString(string str);
+        static int getchoice();                /*工具函数，用来获取选项*/
+        static string getString(string str);    /*工具函数，用来获取输入字符串*/
 
-        /*下面是打印选项和用户选择的私有方法*/
-        bool opt_no_login();
-
-        bool opt_normal_logined();
-
-        bool opt_admin_logined();
-
-        bool opt_normal_show_product();
-
-        bool opt_normal_show_order();
-
-        bool opt_admin_manage_order();
-
-        bool opt_admin_manage_user();
-
-        bool opt_admin_manage_product();
+        bool opt_no_login();    /*处理未登录的交互操作*/
+        bool opt_normal_logined();  /*处理普通用户登陆后的交互操作*/
+        bool opt_admin_logined();   /*处理管理员用户登陆后的交互操作*/
+        bool opt_normal_show_product(); /*处理普通用户获取可以购买的商品的交互操作*/
+        bool opt_normal_show_order();   /*处理普通用户获取订单的交互操作*/
+        bool opt_admin_manage_order();  /*处理管理员用户管理订单的交互操作*/
+        bool opt_admin_manage_user();   /*处理管理员用户管理用户的交互操作*/
+        bool opt_admin_manage_product();    /*处理管理员用户管理商品的交互操作*/
     public:
-        ShopController();
-        bool checkLogin();
+        ShopController();                               /*构造函数*/
+        bool checkLogin();                              /*检查是否已经登录*/
         bool login(string username,string userpass);    /*登录*/
-        void logout();        /*注销账号*/
-        bool selectOption();    /*选择一个选项*/
-        string getErrormsg();
+        void logout();                                  /*注销账号*/
+        bool selectOption();                            /*选择一个选项*/
+        string getErrormsg();                           /*获取错误消息*/
 };
 
 string ShopController::getErrormsg(){
@@ -95,9 +89,6 @@ void ShopController::logout(){
     user = nullptr;
 }
 
-/**
- * 用户未登录时mainkey用来传登陆成功的session 已登录时mainkey
- */
 bool ShopController::selectOption(){
     cout<<"零食商城 v0.0"<<endl;
     if(this->checkLogin()){
@@ -144,7 +135,7 @@ int ShopController::getchoice(){
     for(int i = 0;i<choice.length();i++){
         if(!isdigit(choice[i])){
             cout<<"选项无效,请重新";
-            return this->getchoice();
+            return getchoice();
         }
     }
     clearit();

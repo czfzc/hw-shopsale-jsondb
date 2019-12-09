@@ -9,13 +9,22 @@
 #include"../model/User.h"
 using namespace std;
 
+/**
+ *  本类是用来管理用户（User）模型的管理器，它在MVC架构中处于repository层，
+ *  负责处理数据库映射模型的事务,实现了部分根据字段从数据库获取数据并且映射到
+ *  模型的函数
+ *  虽然已被提交作业，但是代码可能被更新在github，您可以在主目录下使用git pull origin master命令拉取以更新代码
+ *  链接https://github.com/czfzc/hw-shopsale-jsondb/blob/master/manager/UserManager.h
+ *  authored by 曹子帆 2019.12.9
+ */
+
 class UserManager{
     private:
         void mapFromDatabase();     /*将数据库中信息映射进成员变量users中*/
         vector<User> users;        /*当前映射并且被维护的的用户列表*/
     public:
-        UserManager();
-        ~UserManager();
+        UserManager();              /*构造函数，用来初始化一些成员变量以及调用mapFromDatabase函数以映射模型到高速缓存*/
+        ~UserManager();             /*析构函数*/
         bool addUser(string username,string userpass,string usertype,string &mainkey); /*添加用户*/
         bool delUser(string mainkey);                                    /*删除用户*/
         bool updateUsertype(string mainkey,string usertype);             /*更新用户类型*/
@@ -27,7 +36,7 @@ class UserManager{
         bool registNromalUser(string username,string userpass,string &mainkey); /*注册普通用户*/
         static void formattedPrintProductList(vector<User> users);             /*根据列表格式化打印用户信息*/
         void formattedPrintProductList();                                 /*打印所有用户信息*/
-        bool findUsersByUserLike(string name,vector<User> &users);
+        bool findUsersByUserLike(string name,vector<User> &users);          /*用户名模糊查找*/
 };
 
 

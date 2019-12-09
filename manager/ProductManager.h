@@ -5,24 +5,33 @@
 #include"../util/Const.h"
 using namespace std;
 
+/**
+ *  本类是用来管理商品（Product）模型的管理器，它在MVC架构中处于repository层，
+ *  负责处理数据库映射模型的事务,实现了部分根据字段从数据库获取数据并且映射到
+ *  模型的函数
+ *  虽然已被提交作业，但是代码可能被更新在github，您可以在主目录下使用git pull origin master命令拉取以更新代码
+ *  链接https://github.com/czfzc/hw-shopsale-jsondb/blob/master/manager/ProductManager.h
+ *  authored by 曹子帆 2019.12.9
+ */
+
 class ProductManager{
     private:
-        void mapFromDatabase();
+        void mapFromDatabase();             /*从数据库映射到模型*/
         vector<Product> products;        /*当前映射并且被维护的的用户列表*/
     public:
-        ProductManager();
-        ~ProductManager();
-        bool addProduct(string name,int rest,double price,string type,string &mainkey);
-        bool delProduct(string mainkey);
-        bool updateName(string mainkey,string name);
-        bool updateRest(string mainkey,int rest);
-        bool updatePrice(string mainkey,double price);
-        bool updateType(string mainkey,string type);
-        bool findProductByMainkey(string mainkey,Product &product);
-        bool findProductsByNameLike(string name,vector<Product> &products);
-        void formattedPrintProductList();
-        static void formattedPrintProductList(vector<Product> products);
-        bool findProductsByMainkeys(vector<string> mainkeys,vector<Product> &products);
+        ProductManager();                   /*构造函数，用来初始化一些成员变量以及调用mapFromDatabase函数以映射模型到高速缓存*/
+        ~ProductManager();                  /*析构函数*/
+        bool addProduct(string name,int rest,double price,string type,string &mainkey); /*添加商品*/
+        bool delProduct(string mainkey);                            /*根据商品id删除商品*/
+        bool updateName(string mainkey,string name);                /*更新商品名称*/
+        bool updateRest(string mainkey,int rest);                   /*更新商品剩余量*/
+        bool updatePrice(string mainkey,double price);              /*更新商品价格*/
+        bool updateType(string mainkey,string type);                /*更新商品类型*/
+        bool findProductByMainkey(string mainkey,Product &product);         /*查找商品*/
+        bool findProductsByNameLike(string name,vector<Product> &products);     /*根据名称模糊查找*/
+        void formattedPrintProductList();                           /*格式化输出所有商品*/
+        static void formattedPrintProductList(vector<Product> products);    /*根据列表格式化输出商品*/
+        bool findProductsByMainkeys(vector<string> mainkeys,vector<Product> &products); /*批量查找商品*/
 };
 
 void ProductManager::mapFromDatabase(){

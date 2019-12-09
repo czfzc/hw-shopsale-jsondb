@@ -10,6 +10,26 @@
 #include "../lib/CJsonObject.h" 
 using namespace std;
 
+/**
+ *  此为数据库操作核心代码，以下这些工具函数用来实现了一个基于json格式存储的
+ *  文件型弱关系型数据库（其实它甚至不能叫做数据库，它没有任何客户端与服务端，
+ *  仅仅是作为一个头文件引入的依赖形式存在，它会将要存储的数据写入文件并且从
+ *  文件里取出符合条件的数据，并且这些文件的位置与主程序的位置是高度依赖的，
+ *  而且它也没有实现任何事务，原子性操作，以及数据关联级联功能甚至它都没有对
+ *  文件进行加锁，以及对自身的函数进行加锁操作，原因有二，一是快期末了由于时
+ *  间原因我无法再实现这些，二是我对linux编程比较熟悉，这些可以用linux系统
+ *  调用的函数进行实现，比如文件锁flock和互斥锁mutex，但是这些会大大降低此
+ *  应用的移植性，毕竟我还想编译一份windows版本作为作业提交），以下函数包含
+ *  基本的批量增删改查操作，具体可以看函数介绍
+ * 
+ *  虽然已被提交作业，但是代码可能被更新在github，您可以在主目录下使用git pull origin master命令拉取以更新代码
+ *  链接https://github.com/czfzc/hw-shopsale-jsondb/blob/master/manager/UserManager.h
+ *  authored by 曹子帆 2019.12.9
+ */
+
+/*
+    获取数据库文件相对位置
+*/
 string getFilePath(string tableName){
     return "./data/"+tableName+".dat";
 }
@@ -116,7 +136,14 @@ bool selectValuesIntoTable(string tableName,map<string,vector<string>*> &keymaps
         return false;
     }
 }
-
+/*
+    根据一对条件查找
+    tableName   表名
+    key         要获取的字段名
+    values      待返回的所有符合条件的字段值
+    condkey     条件的键名
+    condvalue   条件的键值
+*/
 bool selectValueIntoTable(string tableName,string key,vector<string>* &values,string condkey,string condvalue){
     map<string,vector<string>*> mp;
     map<string,string> condition;
@@ -126,6 +153,14 @@ bool selectValueIntoTable(string tableName,string key,vector<string>* &values,st
         values = mp.find(key)->second;
     }else return false;
 }
+
+/*
+    根据主键查找一个记录的一个字段
+    tableName   表名
+    key         要获取的字段名
+    mainkey     主键键名
+    mainvalue   主键键值    
+*/
 
 string getValueByMainKey(string tableName,string key,string mainkey,string mainvalue){
     vector<string> *res=nullptr;
@@ -183,11 +218,12 @@ bool updateValuesIntoTable(string tableName,map<string,string> &keymaps,map<stri
 }
 
 /*
-    tableName 表名
-    key 更新的字段名 不存在则创建
-    value 更新的字段值 不存在则插入
-    condkey 条件
-    condvalue 条件值
+    批量更新
+    tableName   表名
+    key         更新的字段名 不存在则创建
+    value       更新的字段值 不存在则插入
+    condkey     条件
+    condvalue   条件值
 */
 
 bool updateValueIntoTable(string tableName,string key,string value,string condkey,string condvalue){
@@ -196,6 +232,14 @@ bool updateValueIntoTable(string tableName,string key,string value,string condke
     condition.insert(pair<string,string>(condkey,condvalue));
     return updateValuesIntoTable(tableName,keymp,condition);
 }
+
+/*
+    有主键批量插入数据库表
+    tableName   表名
+    keymaps     需要插入的键值对哈希表
+    mainkey     主键名
+    mainkey     主键值
+*/
 
 bool insertValuesWithMainkeyIntoTable(string tableName,map<string,string> &keymaps,string mainkey,string mainvalue){
     string file_name=getFilePath(tableName);
@@ -234,12 +278,27 @@ bool insertValuesWithMainkeyIntoTable(string tableName,map<string,string> &keyma
     return true;
 }
 
+/*
+    有主键插入一条数据到数据库表
+    tableName   表名
+    key         要插入的键名
+    value       要插入的键值
+    mainkey     主键名
+    mainvalue   主键值
+*/
+
 bool insertValueWithMainkeyIntoTable(string tableName,string key,string value,string mainkey,string mainvalue){
     map<string,string> mp;
     mp.insert(pair<string,string>(key,value));
     return insertValuesWithMainkeyIntoTable(tableName,mp,mainkey,mainvalue);
 }
 
+
+/*
+    无主键批量插入数据库表
+    tableName   表名
+    keymaps     需要插入的键值对哈希表
+*/
 
 bool insertValuesIntoTable(string tableName,map<string,string> &keymaps){
     string file_name=getFilePath(tableName);
@@ -271,11 +330,25 @@ bool insertValuesIntoTable(string tableName,map<string,string> &keymaps){
     return true;
 }
 
+/*
+    无主键插入一条数据到数据库表
+    tableName   表名
+    key         要插入的键名
+    value       要插入的键值
+*/
+
 bool insertIt(string tableName,string key,string value){
     map<string,string> mp;
     mp.insert(pair<string,string>(key,value));
     return insertValuesIntoTable(tableName,mp);
 }
+
+/*
+    判断字段值是否存在
+    tableName   表名
+    key         键名
+    value       键值
+*/
 
 bool existsInTable(string tableName,string key,string value){
     string file_name=getFilePath(tableName);
